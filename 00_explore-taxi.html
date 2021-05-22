@@ -1,0 +1,1060 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exploring the NYC Yellow taxi data set &#8212; NYC Yellow Cab Taxi Data Analysis</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="01 - Create descriptive statistics for NYC Yellow Cab data set" href="01_analyze-taxi.html" />
+    <link rel="prev" title="Using Coiled to explore, analyze and predict NYC Yellowcab taxi tips" href="README.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <h1 class="site-logo" id="site-title">NYC Yellow Cab Taxi Data Analysis</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="README.html">
+   Using Coiled to explore, analyze and predict NYC Yellowcab taxi tips
+  </a>
+ </li>
+</ul>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Exploring the NYC Yellow taxi data set
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_analyze-taxi.html">
+   01 - Create descriptive statistics for NYC Yellow Cab data set
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_predict-taxi.html">
+   Create predictive model for NYC Yellow Cab data set
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/00_explore-taxi.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/cooperrc/nyc-taxi-coiled"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/cooperrc/nyc-taxi-coiled/issues/new?title=Issue%20on%20page%20%2F00_explore-taxi.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/cooperrc/nyc-taxi-coiled/master?urlpath=tree/00_explore-taxi.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#loading-the-yellow-cab-data">
+   Loading the Yellow Cab data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#exploring-the-yellow-cab-data-set">
+   Exploring the Yellow Cab data set
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#what-data-is-in-the-yellow-cab-data-set">
+     What data is in the Yellow Cab data set?
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#how-can-you-use-the-yellow-cab-data-set">
+     How can you use the Yellow Cab data set?
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#studying-the-trends-in-this-subset">
+   Studying the trends in this subset
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#wrapping-up">
+   Wrapping up
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="exploring-the-nyc-yellow-taxi-data-set">
+<h1>Exploring the NYC Yellow taxi data set<a class="headerlink" href="#exploring-the-nyc-yellow-taxi-data-set" title="Permalink to this headline">¶</a></h1>
+<p>In this notebook, you will explore a small subset of the NYC Yellow Cab dataset from 2018. You have two goals:</p>
+<ul class="simple">
+<li><p>understand <em>what</em> data is collected by Yellow Cab</p></li>
+<li><p>understand <em>how</em> you can use this data in your own predictions</p></li>
+</ul>
+<p>The next steps are</p>
+<ul class="simple">
+<li><p>load the full data set in a <span class="xref myst">Dask dataframe</span> on <span class="xref myst">Coiled</span></p></li>
+<li><p>get some statistics on users and drivers</p></li>
+<li><p>make a predictive model using ???</p></li>
+</ul>
+<div class="section" id="loading-the-yellow-cab-data">
+<h2>Loading the Yellow Cab data<a class="headerlink" href="#loading-the-yellow-cab-data" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">yellow_tripdata_2018-01_0-end-by-1000.csv</span></code> is <span class="math notranslate nohighlight">\(8760 \times 18\)</span>. It is a <em>small</em> subset of the first comma separated value (csv) data set hosted on <span class="xref myst">Amazon Web Services</span>. You can use these data points to plot figures and do some initial data exploration. The first <code class="docutils literal notranslate"><span class="pre">Unnamed</span></code> column corresponds to the row taken from the original csv.</p>
+<blockquote>
+<div><p><strong>Note</strong>: This data was prepared by taking every 1,000<span class="math notranslate nohighlight">\(^{th}\)</span> row of <code class="docutils literal notranslate"><span class="pre">s3://nyc-tlc/trip</span> <span class="pre">data/yellow_tripdata_2018-01.csv</span></code>. When you load the full Yellow Cab data set into a Dask dataframe, you will use all 8,759,874 in this file and all the other 2018 csv files. The steps to recreate this subset is as such</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">taxi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;s3://nyc-tlc/trip data/yellow_tripdata_2018-01.csv&quot;</span><span class="p">)</span>
+<span class="n">taxi</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">1000</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;yellow_tripdata_2018-01_0-end-by-1000.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_subset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./yellow_tripdata_2018-01_0-end-by-1000.csv&#39;</span><span class="p">)</span>
+<span class="n">taxi_subset</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>VendorID</th>
+      <th>tpep_pickup_datetime</th>
+      <th>tpep_dropoff_datetime</th>
+      <th>passenger_count</th>
+      <th>trip_distance</th>
+      <th>RatecodeID</th>
+      <th>store_and_fwd_flag</th>
+      <th>PULocationID</th>
+      <th>DOLocationID</th>
+      <th>payment_type</th>
+      <th>fare_amount</th>
+      <th>extra</th>
+      <th>mta_tax</th>
+      <th>tip_amount</th>
+      <th>tolls_amount</th>
+      <th>improvement_surcharge</th>
+      <th>total_amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>1</td>
+      <td>2018-01-01 00:21:05</td>
+      <td>2018-01-01 00:24:23</td>
+      <td>1</td>
+      <td>0.50</td>
+      <td>1</td>
+      <td>N</td>
+      <td>41</td>
+      <td>24</td>
+      <td>2</td>
+      <td>4.5</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>5.80</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1000</td>
+      <td>1</td>
+      <td>2018-01-01 00:16:51</td>
+      <td>2018-01-01 00:26:47</td>
+      <td>1</td>
+      <td>1.30</td>
+      <td>1</td>
+      <td>N</td>
+      <td>114</td>
+      <td>90</td>
+      <td>2</td>
+      <td>8.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>9.30</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2000</td>
+      <td>2</td>
+      <td>2018-01-01 00:22:20</td>
+      <td>2018-01-01 00:36:09</td>
+      <td>1</td>
+      <td>2.90</td>
+      <td>1</td>
+      <td>N</td>
+      <td>161</td>
+      <td>263</td>
+      <td>2</td>
+      <td>12.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>13.30</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3000</td>
+      <td>1</td>
+      <td>2018-01-01 00:57:07</td>
+      <td>2018-01-01 01:15:50</td>
+      <td>2</td>
+      <td>3.50</td>
+      <td>1</td>
+      <td>N</td>
+      <td>142</td>
+      <td>263</td>
+      <td>1</td>
+      <td>15.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>4.05</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>20.35</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4000</td>
+      <td>1</td>
+      <td>2018-01-01 00:30:04</td>
+      <td>2018-01-01 00:40:11</td>
+      <td>1</td>
+      <td>1.20</td>
+      <td>1</td>
+      <td>N</td>
+      <td>158</td>
+      <td>186</td>
+      <td>1</td>
+      <td>8.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>2.00</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>11.30</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>8755</th>
+      <td>8755000</td>
+      <td>2</td>
+      <td>2018-01-31 23:39:54</td>
+      <td>2018-01-31 23:48:26</td>
+      <td>1</td>
+      <td>2.35</td>
+      <td>1</td>
+      <td>N</td>
+      <td>68</td>
+      <td>45</td>
+      <td>1</td>
+      <td>9.5</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>2.70</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>13.50</td>
+    </tr>
+    <tr>
+      <th>8756</th>
+      <td>8756000</td>
+      <td>2</td>
+      <td>2018-01-31 23:06:02</td>
+      <td>2018-01-31 23:09:34</td>
+      <td>1</td>
+      <td>0.74</td>
+      <td>1</td>
+      <td>N</td>
+      <td>65</td>
+      <td>97</td>
+      <td>2</td>
+      <td>4.5</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>0.00</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>5.80</td>
+    </tr>
+    <tr>
+      <th>8757</th>
+      <td>8757000</td>
+      <td>2</td>
+      <td>2018-01-31 23:08:04</td>
+      <td>2018-01-31 23:23:19</td>
+      <td>1</td>
+      <td>3.01</td>
+      <td>1</td>
+      <td>N</td>
+      <td>161</td>
+      <td>158</td>
+      <td>1</td>
+      <td>12.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>2.66</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>15.96</td>
+    </tr>
+    <tr>
+      <th>8758</th>
+      <td>8758000</td>
+      <td>1</td>
+      <td>2018-01-31 23:23:00</td>
+      <td>2018-01-31 23:31:15</td>
+      <td>1</td>
+      <td>1.80</td>
+      <td>1</td>
+      <td>N</td>
+      <td>162</td>
+      <td>113</td>
+      <td>1</td>
+      <td>8.5</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>1.96</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>11.76</td>
+    </tr>
+    <tr>
+      <th>8759</th>
+      <td>8759000</td>
+      <td>2</td>
+      <td>2018-01-31 23:51:20</td>
+      <td>2018-02-01 00:03:08</td>
+      <td>1</td>
+      <td>3.02</td>
+      <td>1</td>
+      <td>N</td>
+      <td>100</td>
+      <td>231</td>
+      <td>1</td>
+      <td>11.5</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>2.56</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>15.36</td>
+    </tr>
+  </tbody>
+</table>
+<p>8760 rows × 18 columns</p>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="exploring-the-yellow-cab-data-set">
+<h2>Exploring the Yellow Cab data set<a class="headerlink" href="#exploring-the-yellow-cab-data-set" title="Permalink to this headline">¶</a></h2>
+<p>The data set is now stored in a Pandas dataframe, <code class="docutils literal notranslate"><span class="pre">taxi_subset</span></code>. You can troubleshoot and explore the data to understand <em>what</em> data is collected. First, look at the column names as such</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_subset</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;Unnamed: 0&#39;, &#39;VendorID&#39;, &#39;tpep_pickup_datetime&#39;,
+       &#39;tpep_dropoff_datetime&#39;, &#39;passenger_count&#39;, &#39;trip_distance&#39;,
+       &#39;RatecodeID&#39;, &#39;store_and_fwd_flag&#39;, &#39;PULocationID&#39;, &#39;DOLocationID&#39;,
+       &#39;payment_type&#39;, &#39;fare_amount&#39;, &#39;extra&#39;, &#39;mta_tax&#39;, &#39;tip_amount&#39;,
+       &#39;tolls_amount&#39;, &#39;improvement_surcharge&#39;, &#39;total_amount&#39;],
+      dtype=&#39;object&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="what-data-is-in-the-yellow-cab-data-set">
+<h3>What data is in the Yellow Cab data set?<a class="headerlink" href="#what-data-is-in-the-yellow-cab-data-set" title="Permalink to this headline">¶</a></h3>
+<p>Each row corresponds to one Yellow Cab trip in this data set. For each trip, there are 18 recorded values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Unnamed:</span> <span class="pre">0</span></code>: row number from the original data set</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VendorID</span></code>: A code indicating the TPEP provider that provided the record.
+1= Creative Mobile Technologies, LLC; 2= VeriFone Inc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tpep_pickup_datetime</span></code>: The date and time when the meter was engaged.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tpep_dropoff_datetime</span></code>: The date and time when the meter was disengaged.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Passenger_count</span></code>: The number of passengers in the vehicle.
+This is a driver-entered value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Trip_distance</span></code>: The elapsed trip distance in miles reported by the taximeter.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PULocationID</span></code>: TLC Taxi Zone in which the taximeter was engaged</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DOLocationID</span></code>: TLC Taxi Zone in which the taximeter was disengaged</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RateCodeID</span></code>: The final rate code in effect at the end of the trip.
+1= Standard rate
+2=JFK
+3=Newark
+4=Nassau or Westchester
+5=Negotiated fare
+6=Group ride</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Store_and_fwd_flag</span></code>: This flag indicates whether the trip record was held in vehicle
+memory before sending to the vendor, aka “store and forward,”
+because the vehicle did not have a connection to the server.
+Y= store and forward trip
+N= not a store and forward trip</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Payment_type</span></code>: A numeric code signifying how the passenger paid for the trip.
+1= Credit card
+2= Cash
+3= No charge
+4= Dispute
+5= Unknown
+6= Voided trip</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Fare_amount</span></code>: The time-and-distance fare calculated by the meter.
+Extra Miscellaneous extras and surcharges. Currently, this only includes
+the <span class="math notranslate nohighlight">\(\$0.50\)</span> and <span class="math notranslate nohighlight">\(\$1\)</span> rush hour and overnight charges.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MTA_tax</span></code>: $0.50 MTA tax that is automatically triggered based on the metered
+rate in use.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Improvement_surcharge</span></code>: $0.30 improvement surcharge assessed trips at the flag drop. The
+improvement surcharge began being levied in 2015.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Tip_amount</span></code>: Tip amount – This field is automatically populated for credit card
+tips. Cash tips are not included.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Tolls_amount</span></code>: Total amount of all tolls paid in trip.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Total_amount</span></code>: The total amount charged to passengers. Does not include cash tips.</p></li>
+</ul>
+<blockquote>
+<div><p><strong>Note</strong>: The data descriptions are provided in this <a class="reference external" href="https://www1.nyc.gov/assets/tlc/downloads/pdf/data_dictionary_trip_records_yellow.pdf">Yellow Cab pdf</a></p>
+</div></blockquote>
+</div>
+<div class="section" id="how-can-you-use-the-yellow-cab-data-set">
+<h3>How can you use the Yellow Cab data set?<a class="headerlink" href="#how-can-you-use-the-yellow-cab-data-set" title="Permalink to this headline">¶</a></h3>
+<p>There are a number of statistics and models you can use to describe the data or predict new data points. For example, a Yellow Cab driver may want to maximize tips over the course of a work day. The <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code> would be the dependent variable in your models. You can create statistics that relate distance travelled, fares, number of passengers, etc. to <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>.</p>
+<p>If you are interested in <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>, consider 2 variables to start:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">trip_distance</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fare_amount</span></code></p></li>
+</ul>
+<p>One model, might be that longer trips and higher fares should result in higher tips. Start with a <a class="reference external" href="https://seaborn.pydata.org/generated/seaborn.pairplot.html"><code class="docutils literal notranslate"><span class="pre">pairplot</span></code></a> to see the correlation between these three variables,</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tip_amount</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">trip_distance</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fare_amount</span></code></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set_context</span><span class="p">(</span><span class="s2">&quot;notebook&quot;</span><span class="p">,</span> <span class="n">font_scale</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">rc</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;lines.linewidth&quot;</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">})</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">taxi_subset</span><span class="p">[[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">,</span> <span class="s1">&#39;trip_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;fare_amount&#39;</span><span class="p">]])</span>
+<span class="n">f</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Pair plots for tips, distance, and fares&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.05</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.05, &#39;Pair plots for tips, distance, and fares&#39;)
+</pre></div>
+</div>
+<img alt="_images/00_explore-taxi_8_1.png" src="_images/00_explore-taxi_8_1.png" />
+</div>
+</div>
+<p>In this pairplot, you see</p>
+<ul class="simple">
+<li><p>histograms on the diagonla for each variable: <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>, <code class="docutils literal notranslate"><span class="pre">trip_distance</span></code>, and <code class="docutils literal notranslate"><span class="pre">fare_amount</span></code></p></li>
+<li><p>scatter plots relating <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>, <code class="docutils literal notranslate"><span class="pre">trip_distance</span></code>, and <code class="docutils literal notranslate"><span class="pre">fare_amount</span></code> on the x-axis in the first, second third columns, respectively and on the y-axis on the first, second, third rows, respectively</p></li>
+</ul>
+<p>The histogram for <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code> has many occurrences of $0. These could be unrecorded tips or cases where the passenger did not tip at all. There is no way to separate these two cases, so you can ignore <code class="docutils literal notranslate"><span class="pre">tip_amount</span> <span class="pre">==</span> <span class="pre">0</span></code>. Similarly, you can ignore <code class="docutils literal notranslate"><span class="pre">trip_distance</span> <span class="pre">==</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">fare_amount</span> <span class="pre">==</span> <span class="pre">0</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_tips</span> <span class="o">=</span> <span class="n">taxi_subset</span><span class="p">[(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> 
+                        <span class="p">(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> 
+                        <span class="p">(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span>
+<span class="n">taxi_tips</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>VendorID</th>
+      <th>tpep_pickup_datetime</th>
+      <th>tpep_dropoff_datetime</th>
+      <th>passenger_count</th>
+      <th>trip_distance</th>
+      <th>RatecodeID</th>
+      <th>store_and_fwd_flag</th>
+      <th>PULocationID</th>
+      <th>DOLocationID</th>
+      <th>payment_type</th>
+      <th>fare_amount</th>
+      <th>extra</th>
+      <th>mta_tax</th>
+      <th>tip_amount</th>
+      <th>tolls_amount</th>
+      <th>improvement_surcharge</th>
+      <th>total_amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>3000</td>
+      <td>1</td>
+      <td>2018-01-01 00:57:07</td>
+      <td>2018-01-01 01:15:50</td>
+      <td>2</td>
+      <td>3.50</td>
+      <td>1</td>
+      <td>N</td>
+      <td>142</td>
+      <td>263</td>
+      <td>1</td>
+      <td>15.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>4.05</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>20.35</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4000</td>
+      <td>1</td>
+      <td>2018-01-01 00:30:04</td>
+      <td>2018-01-01 00:40:11</td>
+      <td>1</td>
+      <td>1.20</td>
+      <td>1</td>
+      <td>N</td>
+      <td>158</td>
+      <td>186</td>
+      <td>1</td>
+      <td>8.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>2.00</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>11.30</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>6000</td>
+      <td>1</td>
+      <td>2018-01-01 00:31:46</td>
+      <td>2018-01-01 00:34:07</td>
+      <td>1</td>
+      <td>0.50</td>
+      <td>1</td>
+      <td>N</td>
+      <td>263</td>
+      <td>141</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>1.05</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>6.35</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>9000</td>
+      <td>1</td>
+      <td>2018-01-01 00:28:45</td>
+      <td>2018-01-01 00:35:34</td>
+      <td>1</td>
+      <td>1.90</td>
+      <td>1</td>
+      <td>N</td>
+      <td>43</td>
+      <td>75</td>
+      <td>1</td>
+      <td>8.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>1.00</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>10.30</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>11000</td>
+      <td>2</td>
+      <td>2018-01-01 00:07:11</td>
+      <td>2018-01-01 00:08:46</td>
+      <td>1</td>
+      <td>0.33</td>
+      <td>1</td>
+      <td>N</td>
+      <td>229</td>
+      <td>229</td>
+      <td>1</td>
+      <td>3.5</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>0.96</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>5.76</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>8754</th>
+      <td>8754000</td>
+      <td>1</td>
+      <td>2018-01-31 23:50:41</td>
+      <td>2018-02-01 00:01:39</td>
+      <td>1</td>
+      <td>3.10</td>
+      <td>1</td>
+      <td>N</td>
+      <td>249</td>
+      <td>50</td>
+      <td>1</td>
+      <td>12.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>2.66</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>15.96</td>
+    </tr>
+    <tr>
+      <th>8755</th>
+      <td>8755000</td>
+      <td>2</td>
+      <td>2018-01-31 23:39:54</td>
+      <td>2018-01-31 23:48:26</td>
+      <td>1</td>
+      <td>2.35</td>
+      <td>1</td>
+      <td>N</td>
+      <td>68</td>
+      <td>45</td>
+      <td>1</td>
+      <td>9.5</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>2.70</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>13.50</td>
+    </tr>
+    <tr>
+      <th>8757</th>
+      <td>8757000</td>
+      <td>2</td>
+      <td>2018-01-31 23:08:04</td>
+      <td>2018-01-31 23:23:19</td>
+      <td>1</td>
+      <td>3.01</td>
+      <td>1</td>
+      <td>N</td>
+      <td>161</td>
+      <td>158</td>
+      <td>1</td>
+      <td>12.0</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>2.66</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>15.96</td>
+    </tr>
+    <tr>
+      <th>8758</th>
+      <td>8758000</td>
+      <td>1</td>
+      <td>2018-01-31 23:23:00</td>
+      <td>2018-01-31 23:31:15</td>
+      <td>1</td>
+      <td>1.80</td>
+      <td>1</td>
+      <td>N</td>
+      <td>162</td>
+      <td>113</td>
+      <td>1</td>
+      <td>8.5</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>1.96</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>11.76</td>
+    </tr>
+    <tr>
+      <th>8759</th>
+      <td>8759000</td>
+      <td>2</td>
+      <td>2018-01-31 23:51:20</td>
+      <td>2018-02-01 00:03:08</td>
+      <td>1</td>
+      <td>3.02</td>
+      <td>1</td>
+      <td>N</td>
+      <td>100</td>
+      <td>231</td>
+      <td>1</td>
+      <td>11.5</td>
+      <td>0.5</td>
+      <td>0.5</td>
+      <td>2.56</td>
+      <td>0.0</td>
+      <td>0.3</td>
+      <td>15.36</td>
+    </tr>
+  </tbody>
+</table>
+<p>5781 rows × 18 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">taxi_tips</span><span class="p">[[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">,</span> <span class="s1">&#39;trip_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;fare_amount&#39;</span><span class="p">]])</span>
+<span class="n">f</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Pair plots for tips, distance, and fares</span><span class="se">\n</span><span class="s1">with zeros removed&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.05</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/00_explore-taxi_11_0.png" src="_images/00_explore-taxi_11_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="studying-the-trends-in-this-subset">
+<h2>Studying the trends in this subset<a class="headerlink" href="#studying-the-trends-in-this-subset" title="Permalink to this headline">¶</a></h2>
+<p>The distribution of data for tips, distance, and fares do not follow a normal distribution. This can make statistics such as mean and standard deviation misleading. One simple analysis you can try on the data is to assume it is normally distributed on a log-scale. This is a <em>very approximate</em> assumption that is used in some financial models e.g. <a class="reference external" href="https://www.journals.uchicago.edu/doi/10.1086/260062">Black and Scholes 1973</a>.</p>
+<p>To visually check the distribution on a log-scale, you will <code class="docutils literal notranslate"><span class="pre">apply</span></code> a logarithm function to the dataframe. This will replot the pair plot such that each variable has been scaled by <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">np.log10</span></code></span>, the <span class="math notranslate nohighlight">\(\log_{10}\)</span> in the NumPy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">lognormal</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">taxi_tips</span><span class="p">[[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">,</span> <span class="s1">&#39;trip_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;fare_amount&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">lognormal</span><span class="p">))</span>
+<span class="n">f</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Pair plots for tips, distance, and fares</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span><span class="sa">r</span><span class="s1">&#39;$\log_</span><span class="si">{10}</span><span class="s1">$ applied to data&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.08</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/00_explore-taxi_13_0.png" src="_images/00_explore-taxi_13_0.png" />
+</div>
+</div>
+<p>Now, you can see correlations between <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code> vs <code class="docutils literal notranslate"><span class="pre">trip_distance</span></code> and <code class="docutils literal notranslate"><span class="pre">fare_amount</span></code>. The histograms also look closer to a normal distribution on a log-scale. You can use some statistics of the full data frame with some confidence that the data are normally distributed on a log scale.</p>
+</div>
+<div class="section" id="wrapping-up">
+<h2>Wrapping up<a class="headerlink" href="#wrapping-up" title="Permalink to this headline">¶</a></h2>
+<p>In this notebook, you</p>
+<ul class="simple">
+<li><p>loaded a subset of the NYC Yellow Cab taxi data set</p></li>
+<li><p>explored and defined the data structure</p></li>
+<li><p>identified some variables that may be interesting for further analysis</p></li>
+<li><p>used Seaborn’s <code class="docutils literal notranslate"><span class="pre">pairplots</span></code> to look for trends between trip distances, fare amounts, and tip amounts</p></li>
+<li><p>applied NumPy’s <code class="docutils literal notranslate"><span class="pre">log10</span></code> to a dataframe to check for log-normal distributions in the data</p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="README.html" title="previous page">Using Coiled to explore, analyze and predict NYC Yellowcab taxi tips</a>
+    <a class='right-next' id="next-link" href="01_analyze-taxi.html" title="next page">01 - Create descriptive statistics for NYC Yellow Cab data set</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Ryan C. Cooper<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
