@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create predictive model for NYC Yellow Cab data set &#8212; NYC Yellow Cab Taxi Data Analysis</title>
+    <title>02 - Create predictive model for NYC Yellow Cab data set &#8212; NYC Yellow Cab Taxi Data Analysis</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -94,7 +94,7 @@
 <ul class="current nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="00_explore-taxi.html">
-   Exploring the NYC Yellow taxi data set
+   0 - Exploring the NYC Yellow taxi data set
   </a>
  </li>
  <li class="toctree-l1">
@@ -104,7 +104,7 @@
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Create predictive model for NYC Yellow Cab data set
+   02 - Create predictive model for NYC Yellow Cab data set
   </a>
  </li>
 </ul>
@@ -225,6 +225,27 @@
      1. Create the Dask dataframe
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#partition-the-data-into-testing-and-training-sets">
+     2. Partition the data into testing and training sets
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#perform-the-linear-regression-using-mean-and-compute">
+     3. Perform the linear regression using
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       mean()
+      </span>
+     </code>
+     and
+     <code class="docutils literal notranslate">
+      <span class="pre">
+       compute()
+      </span>
+     </code>
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -244,8 +265,23 @@
               <div>
                 
   <div class="section" id="create-predictive-model-for-nyc-yellow-cab-data-set">
-<h1>Create predictive model for NYC Yellow Cab data set<a class="headerlink" href="#create-predictive-model-for-nyc-yellow-cab-data-set" title="Permalink to this headline">¶</a></h1>
-<p>In this notebook,</p>
+<h1>02 - Create predictive model for NYC Yellow Cab data set<a class="headerlink" href="#create-predictive-model-for-nyc-yellow-cab-data-set" title="Permalink to this headline">¶</a></h1>
+<p>In this notebook, you will</p>
+<ul class="simple">
+<li><p>Launch a <span class="xref myst">Coiled Cluster</span></p></li>
+<li><p>Load a <a class="reference external" href="https://tutorial.dask.org/04_dataframe.html">Dask dataframe</a> into your workspace</p></li>
+<li><p>partition data into training and testing sets</p></li>
+<li><p>perform a linear least square regression with 2 independent variables</p></li>
+<li><p>use <a class="reference external" href="https://xgboost.readthedocs.io/en/latest/tutorials/dask.html">xgboost</a> to train a machine learning model</p></li>
+</ul>
+<p>You will need</p>
+<ul class="simple">
+<li><p>Coiled</p></li>
+<li><p>Dask</p></li>
+<li><p>Dask-ML: a machine-learning library for Dask</p></li>
+<li><p>NumPy</p></li>
+<li><p>Matplotlib</p></li>
+</ul>
 <div class="section" id="launch-a-cluster">
 <h2>Launch a cluster<a class="headerlink" href="#launch-a-cluster" title="Permalink to this headline">¶</a></h2>
 <p>The first step is to spin up a Dask Cluster. In Coiled, this is done by creating a <code class="docutils literal notranslate"><span class="pre">coiled.Cluster</span></code> instance, there are <a class="reference external" href="https://docs.coiled.io/user_guide/api.html#coiled.Cluster">several keyword arguments</a> you can use to specify the details of your cluster further. Please read the <a class="reference external" href="https://docs.coiled.io/user_guide/cluster_creation.html">cluster creation documentation</a> to know more.</p>
@@ -430,28 +466,22 @@
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask_ml.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-</pre></div>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_test_split</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(,</span> <span class="n">taxi_full</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">],</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<div class="section" id="partition-the-data-into-testing-and-training-sets">
+<h3>2. Partition the data into testing and training sets<a class="headerlink" href="#partition-the-data-into-testing-and-training-sets" title="Permalink to this headline">¶</a></h3>
+<p>Load the <code class="docutils literal notranslate"><span class="pre">model_selection</span></code> library from Dask-ML. You will use this function to split the data into training and testing dataframes. The <code class="docutils literal notranslate"><span class="pre">X</span></code> variable holds all of the data except for <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>. The <code class="docutils literal notranslate"><span class="pre">y</span></code> variable is the <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>, your observations for predictions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask_ml.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">taxi_full_wtips</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">taxi_full_wtips</span><span class="o">.</span><span class="n">columns</span> <span class="o">!=</span> <span class="s1">&#39;tip_amount&#39;</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">taxi_full_wtips</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">]</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
+<blockquote>
+<div><p><strong>Note</strong>: Need to get more credits to run analysis with partitioned data</p>
+</div></blockquote>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dask</span>
@@ -462,6 +492,31 @@
 </div>
 </div>
 </div>
+</div>
+<div class="section" id="perform-the-linear-regression-using-mean-and-compute">
+<h3>3. Perform the linear regression using <code class="docutils literal notranslate"><span class="pre">mean()</span></code> and <code class="docutils literal notranslate"><span class="pre">compute()</span></code><a class="headerlink" href="#perform-the-linear-regression-using-mean-and-compute" title="Permalink to this headline">¶</a></h3>
+<p>Linear regression minimizes the sum of squares error between a linear function of  dependent variables,</p>
+<p><span class="math notranslate nohighlight">\(f(x_1,~x_2) = \beta + \alpha_1 x_1 + \alpha_2 x_2\)</span></p>
+<p><span class="math notranslate nohighlight">\(\min(\sum|y - f(x_1,~x_2)|^2)\)</span></p>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\beta = offset\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(x_1 = fare~amount\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(x_2 = trip~distance\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(y_1 = tip~amount\)</span></p></li>
+</ul>
+<p>These equations reduce to a single linear algebra equation as such</p>
+<p><span class="math notranslate nohighlight">\(\mathbf{Z}^T\mathbf{Z a} = \mathbf{Z}^T\mathbf{y}\)</span></p>
+<p><span class="math notranslate nohighlight">\(\left[\begin{array}
+~1 &amp; \sum x_1/N &amp; \sum x_2/N \\
+\sum x_1/N &amp; \sum x_1^2/N &amp; \sum x_1x_2/N \\
+\sum x_2/N &amp;\sum x_1 x_2/N &amp; ~\sum x_2^2/N \end{array}\right]\)</span> = <span class="math notranslate nohighlight">\(
+\left[\begin{array}
+\sum y/N\\
+\sum x_1 y/N\\
+\sum x_2 y/N\\
+\end{array}\right]\)</span></p>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">mean().compute()</span></code> command to calculate this matrix-vector equation. The result is a <span class="math notranslate nohighlight">\(3 \times 3\)</span> array, <code class="docutils literal notranslate"><span class="pre">ZTZ</span></code>, and a vector of length 3, <code class="docutils literal notranslate"><span class="pre">ZTy</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Sx1</span> <span class="o">=</span> <span class="n">x1</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
@@ -498,6 +553,7 @@
 </div>
 </div>
 </div>
+<p>Now, you have the calculated each array value. You can solve the linear least square problem and calculate <span class="math notranslate nohighlight">\([\beta,~\alpha_1,~\alpha_2]\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ZTy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Sy</span><span class="p">,</span> <span class="n">Sx1y</span><span class="p">,</span> <span class="n">Sx2y</span><span class="p">])</span>
@@ -513,6 +569,10 @@
 </div>
 </div>
 </div>
+<p>The result is that the predicted tip from this data set is:</p>
+<p><span class="math notranslate nohighlight">\(tip = \$0.60 + 0.18\cdot (\$total~fare) + 0.07\frac{\$}{mi}(trip~distance [mi])\)</span></p>
+<p>You can use the subset of data from <a class="reference internal" href="00_explore-taxi.html"><span class="doc std std-doc">0 - Exploring the NYC Yellow taxi data set</span></a> to visually inspect the model.</p>
+<p>Import Matplotlib and Pandas. Then, apply the same filter to the data to remove 0’s.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -525,6 +585,8 @@
 </div>
 </div>
 </div>
+<p>Now, you can apply your data to the <code class="docutils literal notranslate"><span class="pre">taxi_subset</span></code> dataframe. You can directly plug in the equation from above as such</p>
+<p><code class="docutils literal notranslate"><span class="pre">predicted_tip</span> <span class="pre">=</span> <span class="pre">A[0]+A[1]*taxi_subset['fare_amount']+A[2]*taxi_subset['trip_distance']</span></code></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> <span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
@@ -537,9 +599,12 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fa665252100&gt;]
 </pre></div>
 </div>
-<img alt="_images/02_predict-taxi_21_1.png" src="_images/02_predict-taxi_21_1.png" />
+<img alt="_images/02_predict-taxi_23_1.png" src="_images/02_predict-taxi_23_1.png" />
 </div>
 </div>
+<blockquote>
+<div><p><strong>Note</strong>: Need more credits to get the xgboost running here. Had a bunch of debugging that used up the credits.</p>
+</div></blockquote>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import dask.array as da</span>
@@ -834,6 +899,7 @@
 </div>
 <div class="section" id="wrapping-up">
 <h2>Wrapping up<a class="headerlink" href="#wrapping-up" title="Permalink to this headline">¶</a></h2>
+<p>In this notebook, you created a prediction for taxi driver tips based upon over 84 million taxi rides in NYC.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coiled</span><span class="o">.</span><span class="n">delete_cluster</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;taxi-predict&quot;</span><span class="p">)</span>

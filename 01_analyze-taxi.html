@@ -56,8 +56,8 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Create predictive model for NYC Yellow Cab data set" href="02_predict-taxi.html" />
-    <link rel="prev" title="Exploring the NYC Yellow taxi data set" href="00_explore-taxi.html" />
+    <link rel="next" title="02 - Create predictive model for NYC Yellow Cab data set" href="02_predict-taxi.html" />
+    <link rel="prev" title="0 - Exploring the NYC Yellow taxi data set" href="00_explore-taxi.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -95,7 +95,7 @@
 <ul class="current nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="00_explore-taxi.html">
-   Exploring the NYC Yellow taxi data set
+   0 - Exploring the NYC Yellow taxi data set
   </a>
  </li>
  <li class="toctree-l1 current active">
@@ -105,7 +105,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="02_predict-taxi.html">
-   Create predictive model for NYC Yellow Cab data set
+   02 - Create predictive model for NYC Yellow Cab data set
   </a>
  </li>
 </ul>
@@ -242,14 +242,13 @@
 <p>In this notebook you will</p>
 <ul class="simple">
 <li><p>Launch a <span class="xref myst">Coiled Cluster</span></p></li>
-<li><p>Load a <span class="xref myst">Dask dataframe</span> into your workspace</p></li>
+<li><p>Load a <a class="reference external" href="https://tutorial.dask.org/04_dataframe.html">Dask dataframe</a> into your workspace</p></li>
 <li><p>Perform math operations on the Dask dataframe to describe statistics of tips, total distance traveled, and fare amounts</p></li>
 </ul>
 <p>You will need</p>
 <ul class="simple">
 <li><p>Coiled</p></li>
 <li><p>Dask</p></li>
-<li></li>
 </ul>
 <div class="section" id="launch-a-cluster">
 <h2>Launch a cluster<a class="headerlink" href="#launch-a-cluster" title="Permalink to this headline">¶</a></h2>
@@ -342,14 +341,10 @@
 </div>
 </div>
 </div>
+<p>Now, you can generate descriptive statistics for the dataframe on Coiled’s cluster, use a <code class="docutils literal notranslate"><span class="pre">describe()</span></code> command to get the mean, standard deviation, min, quartiles, and max as such</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># print(taxi_full.tip_amount.mean().compute())</span>
-<span class="c1"># print(taxi_full.trip_distance.mean().compute())</span>
-<span class="c1"># print(taxi_full.fare_amount.mean().compute())</span>
-<span class="c1"># print(len(taxi_full))</span>
-
-<span class="n">taxi_full</span><span class="p">[[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">,</span> <span class="s1">&#39;trip_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;fare_amount&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_full</span><span class="p">[[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">,</span> <span class="s1">&#39;trip_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;fare_amount&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -430,13 +425,17 @@
 </table>
 </div></div></div>
 </div>
+<p>In the <a class="reference internal" href="00_explore-taxi.html"><span class="doc std std-doc">0 - Exploring the NYC Yellow taxi data set</span></a> notebook, you determined that the 0-data should not be included in the analysis. You can apply the same filtering from the Pandas dataframe to the Dask dataframe as such</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_full_wtips</span> <span class="o">=</span> <span class="n">taxi_full</span><span class="p">[(</span><span class="n">taxi_full</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">taxi_full</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">taxi_full</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_full_wtips</span> <span class="o">=</span> <span class="n">taxi_full</span><span class="p">[(</span><span class="n">taxi_full</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> 
+                            <span class="p">(</span><span class="n">taxi_full</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> 
+                            <span class="p">(</span><span class="n">taxi_full</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>You can check the percentage of rides that you are analyzing with <code class="docutils literal notranslate"><span class="pre">len</span></code> as such</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">taxi_full_wtips</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">taxi_full</span><span class="p">)</span>
@@ -449,14 +448,11 @@
 </div>
 </div>
 </div>
+<p>You cut out 68.7% of the taxi rides with the conditions that tips, fares, and trip distance are more than 0.</p>
+<p>Now, recompute the descriptive statistics.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># print(taxi_full_wtips.tip_amount.mean().compute(), taxi_full_wtips.tip_amount.std().compute())</span>
-<span class="c1"># print(taxi_full_wtips.trip_distance.mean().compute())</span>
-<span class="c1"># print(taxi_full_wtips.fare_amount.mean().compute())</span>
-<span class="c1"># print(len(taxi_full_wtips))</span>
-
-<span class="n">taxi_full_wtips</span><span class="p">[[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">,</span> <span class="s1">&#39;trip_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;fare_amount&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_full_wtips</span><span class="p">[[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">,</span> <span class="s1">&#39;trip_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;fare_amount&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -537,25 +533,39 @@
 </table>
 </div></div></div>
 </div>
+<p>The average tip increased by <span class="math notranslate nohighlight">\(\$1\)</span>, but the average fare and distance remain mostly unchanged.</p>
+<p>Now, you can calculate the histogram bins for the fares, distances and tips. You can put them on a semilog scale to match the previous analysis. In Dask, you can calculate the bin heights and bin widths using <a class="reference external" href="https://docs.dask.org/en/latest/_modules/dask/array/routines.html?highlight=histogram"><code class="docutils literal notranslate"><span class="pre">dask.array.histogram</span></code></a>. You will specify</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bins</span> <span class="pre">=</span> <span class="pre">np.logspace</span></code> to have a log-scale on the x-axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">range</span> <span class="pre">=</span> <span class="pre">[0,</span> <span class="pre">150]</span></code> to specify the range of data to calculate bins within</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dask.array</span> <span class="k">as</span> <span class="nn">da</span>
-<span class="n">h_fare</span><span class="p">,</span> <span class="n">bins_fare</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">taxi_full_wtips</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">])</span>
-<span class="n">h_trip</span><span class="p">,</span> <span class="n">bins_trip</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">taxi_full_wtips</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">],</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">])</span>
-<span class="n">h_tip</span><span class="p">,</span> <span class="n">bins_tip</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">taxi_full_wtips</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">],</span> <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">h_fare</span><span class="p">,</span> <span class="n">bins_fare</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">taxi_full_wtips</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> 
+                                 <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> 
+                                 <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">])</span>
+<span class="n">h_trip</span><span class="p">,</span> <span class="n">bins_trip</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">taxi_full_wtips</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">],</span> 
+                                 <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> 
+                                 <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">])</span>
+<span class="n">h_tip</span><span class="p">,</span> <span class="n">bins_tip</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">taxi_full_wtips</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">],</span> 
+                               <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> 
+                               <span class="nb">range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>To view the histogram, plot the results using Matplotlib. Here, you can load the <a class="reference external" href="https://matplotlib.org/stable/gallery/style_sheets/fivethirtyeight.html"><code class="docutils literal notranslate"><span class="pre">'fivethirtyeight'</span></code></a> style using <code class="docutils literal notranslate"><span class="pre">plt.style.use('fivethirtyeight')</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;fivethirtyeight&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>Next, plot the heights vs bins for fare amount, trip distance, and tip amount. You can use a linear scale on the y-axis and log scale on the x-axis.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">bins_fare</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">h_fare</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">h_fare</span><span class="p">),</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;fare amount ($)&#39;</span><span class="p">)</span>
@@ -567,7 +577,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/01_analyze-taxi_13_0.png" src="_images/01_analyze-taxi_13_0.png" />
+<img alt="_images/01_analyze-taxi_20_0.png" src="_images/01_analyze-taxi_20_0.png" />
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>distributed.client - ERROR - Failed to reconnect to scheduler after 10.00 seconds, closing client
 _GatheringFuture exception was never retrieved
 future: &lt;_GatheringFuture finished exception=CancelledError()&gt;
@@ -588,6 +598,7 @@ asyncio.exceptions.CancelledError
 <blockquote>
 <div><p><strong>Note</strong>: These statistical measures and the following predictive analysis using ordinary least squares regression assume that fares and distances are random variables, but in general fares should be proportional to distance traveled. You should keep this in mind while considering the results of this analysis.</p>
 </div></blockquote>
+<p>Next step is to create a predictive model using the NYC Yellow Cab dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coiled</span><span class="o">.</span><span class="n">delete_cluster</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;taxi-analysis&quot;</span><span class="p">)</span>
@@ -631,8 +642,8 @@ asyncio.exceptions.CancelledError
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="00_explore-taxi.html" title="previous page">Exploring the NYC Yellow taxi data set</a>
-    <a class='right-next' id="next-link" href="02_predict-taxi.html" title="next page">Create predictive model for NYC Yellow Cab data set</a>
+    <a class='left-prev' id="prev-link" href="00_explore-taxi.html" title="previous page">0 - Exploring the NYC Yellow taxi data set</a>
+    <a class='right-next' id="next-link" href="02_predict-taxi.html" title="next page">02 - Create predictive model for NYC Yellow Cab data set</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
