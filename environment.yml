@@ -1,0 +1,25 @@
+name: coiled-environment
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - numpy
+  - pandas
+  - matplotlib
+  - coiled
+  - dask
+  - dask-glm
+  - dask-ml
+  - jupyterlab
+  - jupyterlab_widgets
+  - matplotlib
+  - numba
+  - numpy
+  - pandas
+  - scikit-learn
+  - scipy
+  - seaborn
+  - snappy
+  - pip:
+    - nbgitpuller
+    - sphinx-gallery
