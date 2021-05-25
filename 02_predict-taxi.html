@@ -774,6 +774,12 @@ the <span class="math notranslate nohighlight">\(\$0.50\)</span> and <span class
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.910368403467699
 </pre></div>
 </div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>distributed.client - ERROR - Failed to reconnect to scheduler after 10.00 seconds, closing client
+_GatheringFuture exception was never retrieved
+future: &lt;_GatheringFuture finished exception=CancelledError()&gt;
+asyncio.exceptions.CancelledError
+</pre></div>
+</div>
 </div>
 </div>
 <p>You reduced the MSE from <span class="math notranslate nohighlight">\((\$)^2 2.50\rightarrow(\$)^2 1.91\)</span>, congratulations! There are many other factors that can play an important role in the tips, but you built a model that can use the NYC Yellow Cab taxi data set to predict driver tips using distances, fares, passenger count, pickup and dropoff IDs, and toll amounts. You can play with the parameters to reduce the error in the test data</p>
