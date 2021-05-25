@@ -211,8 +211,8 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#launch-a-cluster">
-   Launch a cluster
+  <a class="reference internal nav-link" href="#launch-a-coiled-cluster">
+   Launch a Coiled cluster
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -244,6 +244,33 @@
        compute()
       </span>
      </code>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#mean-squared-error-in-2-parameter-model">
+     Mean squared error in 2-parameter model
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#improving-the-model-by-including-more-measurements">
+   Improving the model by including more measurements
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#train-the-model">
+     1. Train the model
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-predicted-tips-on-a-subset">
+     2. Plot the predicted tips on a subset
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-the-mse-for-the-xgboost-model">
+     3. Calculate the MSE for the XGBoost model
     </a>
    </li>
   </ul>
@@ -282,12 +309,10 @@
 <li><p>NumPy</p></li>
 <li><p>Matplotlib</p></li>
 </ul>
-<div class="section" id="launch-a-cluster">
-<h2>Launch a cluster<a class="headerlink" href="#launch-a-cluster" title="Permalink to this headline">¶</a></h2>
-<p>The first step is to spin up a Dask Cluster. In Coiled, this is done by creating a <code class="docutils literal notranslate"><span class="pre">coiled.Cluster</span></code> instance, there are <a class="reference external" href="https://docs.coiled.io/user_guide/api.html#coiled.Cluster">several keyword arguments</a> you can use to specify the details of your cluster further. Please read the <a class="reference external" href="https://docs.coiled.io/user_guide/cluster_creation.html">cluster creation documentation</a> to know more.</p>
-<blockquote>
-<div><p><strong>Note</strong>: that you will give a name to this cluster, if you don’t specify this keyword argument, clusters will be given a unique randomly generated name.</p>
-</div></blockquote>
+<div class="section" id="launch-a-coiled-cluster">
+<h2>Launch a Coiled cluster<a class="headerlink" href="#launch-a-coiled-cluster" title="Permalink to this headline">¶</a></h2>
+<p>The first step is to spin up a Dask Cluster. In Coiled, this is done by creating a <code class="docutils literal notranslate"><span class="pre">coiled.Cluster</span></code> instance. You can use <a class="reference external" href="https://docs.coiled.io/user_guide/api.html#coiled.Cluster">keyword arguments</a> to specify the details of your cluster further. Please read the <a class="reference external" href="https://docs.coiled.io/user_guide/cluster_creation.html">cluster creation documentation</a> to know more.</p>
+<p>Give a name to this cluster, if you don’t specify this keyword argument, clusters will be given a unique randomly generated name.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">coiled</span>
@@ -296,7 +321,7 @@
 </div>
 </div>
 <p>The predictive analysis will use <a class="reference external" href="https://xgboost.readthedocs.io/en/latest/tutorials/dask.html">xgboost</a>, so you can create a Coiled software environment using the following command in iPython or Jupyter.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># import coiled</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">coiled</span>
 <span class="n">coiled</span><span class="o">.</span><span class="n">create_software_environment</span><span class="p">(</span>
    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xgboost-on-coiled&quot;</span><span class="p">,</span>
    <span class="n">conda</span><span class="o">=</span><span class="p">{</span>
@@ -332,79 +357,15 @@
 <div class="cell_output docutils container">
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
-</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>You have reached your quota of Coiled credits
+</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found software environment build
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/ryan/.conda/envs/coiledcloud/lib/python3.9/site-packages/coiled/cluster.py:629: UserWarning: Unable to locate credentials
+  warnings.warn(str(e))
 </pre></div>
 </div>
 <div class="output text_html"><pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre>
-</div><div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">169</span><span class="n">d480723af</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># cluster = coiled.Cluster(name=&quot;taxi-predict&quot;, n_workers=10)</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">cluster</span> <span class="o">=</span> <span class="n">coiled</span><span class="o">.</span><span class="n">Cluster</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">software</span><span class="o">=</span><span class="s1">&#39;cooperrc/xgboost-on-coiled&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> 
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/coiled/cluster.py</span> in <span class="ni">__init__</span><span class="nt">(self, name, n_workers, configuration, software, worker_cpu, worker_gpu, worker_memory, worker_class, worker_options, scheduler_cpu, scheduler_memory, scheduler_class, scheduler_options, asynchronous, cloud, account, shutdown_on_close, backend_options, credentials, timeout)</span>
-<span class="g g-Whitespace">    </span><span class="mi">299</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;coiled.Cluster&quot;</span>  <span class="c1"># Used in Dask&#39;s Cluster._ipython_display_</span>
-<span class="g g-Whitespace">    </span><span class="mi">300</span>         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">asynchronous</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">301</span>             <span class="bp">self</span><span class="o">.</span><span class="n">sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_start</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">302</span> 
-<span class="g g-Whitespace">    </span><span class="mi">303</span>     <span class="nd">@property</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/coiled/cluster.py</span> in <span class="ni">sync</span><span class="nt">(self, func, asynchronous, callback_timeout, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">335</span>         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">336</span>     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">_T</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">_T</span><span class="p">]]:</span>
-<span class="ne">--&gt; </span><span class="mi">337</span>         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">sync</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">338</span>             <span class="n">func</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">339</span>             <span class="o">*</span><span class="n">args</span><span class="p">,</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/deploy/cluster.py</span> in <span class="ni">sync</span><span class="nt">(self, func, asynchronous, callback_timeout, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">186</span>             <span class="k">return</span> <span class="n">future</span>
-<span class="g g-Whitespace">    </span><span class="mi">187</span>         <span class="k">else</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">188</span>             <span class="k">return</span> <span class="n">sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">189</span> 
-<span class="g g-Whitespace">    </span><span class="mi">190</span>     <span class="k">def</span> <span class="nf">_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log</span><span class="p">):</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/utils.py</span> in <span class="ni">sync</span><span class="nt">(loop, func, callback_timeout, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">352</span>     <span class="k">if</span> <span class="n">error</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-<span class="g g-Whitespace">    </span><span class="mi">353</span>         <span class="n">typ</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">tb</span> <span class="o">=</span> <span class="n">error</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="ne">--&gt; </span><span class="mi">354</span>         <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">355</span>     <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">356</span>         <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/utils.py</span> in <span class="ni">f</span><span class="nt">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">335</span>             <span class="k">if</span> <span class="n">callback_timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">336</span>                 <span class="n">future</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">future</span><span class="p">,</span> <span class="n">callback_timeout</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">337</span>             <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">future</span>
-<span class="g g-Whitespace">    </span><span class="mi">338</span>         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">339</span>             <span class="n">error</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/tornado/gen.py</span> in <span class="ni">run</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">760</span> 
-<span class="g g-Whitespace">    </span><span class="mi">761</span>                     <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">762</span>                         <span class="n">value</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">763</span>                     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">764</span>                         <span class="n">exc_info</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/coiled/cluster.py</span> in <span class="ni">_start</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">386</span>                 <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">387</span> 
-<span class="ne">--&gt; </span><span class="mi">388</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">cluster_id</span> <span class="o">=</span> <span class="k">await</span> <span class="n">cloud</span><span class="o">.</span><span class="n">create_cluster</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">389</span>                     <span class="n">account</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">account</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">390</span>                     <span class="n">configuration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">,</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/coiled/core.py</span> in <span class="ni">_create_cluster</span><span class="nt">(self, name, configuration, software, worker_cpu, worker_gpu, worker_memory, worker_class, worker_options, scheduler_cpu, scheduler_memory, scheduler_class, scheduler_options, account, workers, log_output, backend_options)</span>
-<span class="g g-Whitespace">    </span><span class="mi">662</span>         <span class="n">error_details</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_websocket_stream</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">log_output</span><span class="p">,</span> <span class="n">use_spinner</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">663</span>         <span class="k">if</span> <span class="n">error_details</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">664</span>             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unable to create cluster: </span><span class="si">{</span><span class="n">error_details</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">665</span> 
-<span class="g g-Whitespace">    </span><span class="mi">666</span>         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cluster_by_name</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">account</span><span class="o">=</span><span class="n">account</span><span class="p">)</span>
-
-<span class="ne">ValueError</span>: Unable to create cluster: You have reached your quota of Coiled credits
-</pre></div>
-</div>
-</div>
+</div></div>
 </div>
 <p>Once the cluster is created (you can see the status on your <a class="reference external" href="https://cloud.coiled.io/">Coiled dashboard</a>), you can connect Dask to the cluster by creating a <code class="docutils literal notranslate"><span class="pre">distributed.Client</span></code> instance.</p>
 <div class="cell docutils container">
@@ -414,11 +375,25 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><h3 style="text-align: left;">Client</h3>
+<div class="output text_html"><table style="border: 2px solid white;">
+<tr>
+<td style="vertical-align: top; border: 0px solid white">
+<h3 style="text-align: left;">Client</h3>
 <ul style="text-align: left; list-style: none; margin: 0; padding: 0;">
-  <li><b>Scheduler: not connected</b></li>
+  <li><b>Scheduler: </b>tls://ec2-100-26-42-77.compute-1.amazonaws.com:8786</li>
+  <li><b>Dashboard: </b><a href='http://ec2-100-26-42-77.compute-1.amazonaws.com:8787' target='_blank'>http://ec2-100-26-42-77.compute-1.amazonaws.com:8787</a></li>
 </ul>
-</div></div>
+</td>
+<td style="vertical-align: top; border: 0px solid white">
+<h3 style="text-align: left;">Cluster</h3>
+<ul style="text-align: left; list-style:none; margin: 0; padding: 0;">
+  <li><b>Workers: </b>10</li>
+  <li><b>Cores: </b>20</li>
+  <li><b>Memory: </b>80.00 GiB</li>
+</ul>
+</td>
+</tr>
+</table></div></div>
 </div>
 </div>
 <div class="section" id="create-data-predictions-in-the-cloud-linear-regression">
@@ -439,10 +414,10 @@
 <span class="n">taxi_full</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
     <span class="s2">&quot;s3://nyc-tlc/trip data/yellow_tripdata_2019-*.csv&quot;</span><span class="p">,</span>
     <span class="n">dtype</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;payment_type&quot;</span><span class="p">:</span> <span class="s2">&quot;UInt8&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;VendorID&quot;</span><span class="p">:</span> <span class="s2">&quot;UInt8&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;passenger_count&quot;</span><span class="p">:</span> <span class="s2">&quot;UInt8&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;RatecodeID&quot;</span><span class="p">:</span> <span class="s2">&quot;UInt8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;payment_type&quot;</span><span class="p">:</span> <span class="s2">&quot;float64&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;VendorID&quot;</span><span class="p">:</span> <span class="s2">&quot;float64&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;passenger_count&quot;</span><span class="p">:</span> <span class="s2">&quot;float64&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;RatecodeID&quot;</span><span class="p">:</span> <span class="s2">&quot;float64&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="n">storage_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;anon&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
     <span class="n">blocksize</span><span class="o">=</span><span class="s2">&quot;16 MiB&quot;</span><span class="p">,</span>
@@ -460,32 +435,53 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>57996934
-</pre></div>
-</div>
-</div>
 </div>
 </div>
 <div class="section" id="partition-the-data-into-testing-and-training-sets">
 <h3>2. Partition the data into testing and training sets<a class="headerlink" href="#partition-the-data-into-testing-and-training-sets" title="Permalink to this headline">¶</a></h3>
 <p>Load the <code class="docutils literal notranslate"><span class="pre">model_selection</span></code> library from Dask-ML. You will use this function to split the data into training and testing dataframes. The <code class="docutils literal notranslate"><span class="pre">X</span></code> variable holds all of the data except for <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>. The <code class="docutils literal notranslate"><span class="pre">y</span></code> variable is the <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>, your observations for predictions.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask_ml.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dask</span>
+<span class="kn">from</span> <span class="nn">dask_ml.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
-<span class="n">X</span> <span class="o">=</span> <span class="n">taxi_full_wtips</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">taxi_full_wtips</span><span class="o">.</span><span class="n">columns</span> <span class="o">!=</span> <span class="s1">&#39;tip_amount&#39;</span><span class="p">]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">taxi_full_wtips</span><span class="p">[[</span><span class="s1">&#39;passenger_count&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;trip_distance&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;RatecodeID&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;PULocationID&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;DOLocationID&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;payment_type&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;fare_amount&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;extra&#39;</span><span class="p">,</span>  
+                            <span class="s1">&#39;tolls_amount&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;total_amount&#39;</span><span class="p">]]</span>
+
 <span class="n">y</span> <span class="o">=</span> <span class="n">taxi_full_wtips</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">]</span>
 
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
 </pre></div>
 </div>
-<blockquote>
-<div><p><strong>Note</strong>: Need to get more credits to run analysis with partitioned data</p>
-</div></blockquote>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dask</span>
-<span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">taxi_full_wtips</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> <span class="n">taxi_full_wtips</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">],</span> <span class="n">taxi_full_wtips</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;passenger_count&#39;, &#39;trip_distance&#39;, &#39;RatecodeID&#39;, &#39;PULocationID&#39;,
+       &#39;DOLocationID&#39;, &#39;payment_type&#39;, &#39;fare_amount&#39;, &#39;extra&#39;, &#39;tolls_amount&#39;,
+       &#39;total_amount&#39;],
+      dtype=&#39;object&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">],</span> <span class="n">y_train</span>
 
 <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
@@ -564,20 +560,21 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.61165532, 0.17636812, 0.07329121])
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.6119274 , 0.176382  , 0.07317207])
 </pre></div>
 </div>
 </div>
 </div>
 <p>The result is that the predicted tip from this data set is:</p>
-<p><span class="math notranslate nohighlight">\(tip = \$0.60 + 0.18\cdot (\$total~fare) + 0.07\frac{\$}{mi}(trip~distance [mi])\)</span></p>
+<p><span class="math notranslate nohighlight">\(tip = \$0.61 + 0.18\cdot (\$total~fare) + 0.07\frac{\$}{mi}(trip~distance [mi])\)</span></p>
 <p>You can use the subset of data from <a class="reference internal" href="00_explore-taxi.html"><span class="doc std std-doc">0 - Exploring the NYC Yellow taxi data set</span></a> to visually inspect the model.</p>
 <p>Import Matplotlib and Pandas. Then, apply the same filter to the data to remove 0’s.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;fivethirtyeight&#39;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="n">taxi_subset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./nyc-taxi-coiled/yellow_tripdata_2018-01_0-end-by-1000.csv&#39;</span><span class="p">)</span>
+<span class="n">taxi_subset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./yellow_tripdata_2019-01_0-end-by-1000.csv&#39;</span><span class="p">)</span>
 <span class="n">taxi_subset</span> <span class="o">=</span> <span class="n">taxi_subset</span><span class="p">[(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> 
                         <span class="p">(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> 
                         <span class="p">(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span>
@@ -589,317 +586,210 @@
 <p><code class="docutils literal notranslate"><span class="pre">predicted_tip</span> <span class="pre">=</span> <span class="pre">A[0]+A[1]*taxi_subset['fare_amount']+A[2]*taxi_subset['trip_distance']</span></code></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> <span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> <span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">],</span> 
+         <span class="s1">&#39;bo&#39;</span><span class="p">,</span> 
+        <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;measured data&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> 
-         <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">],</span> <span class="s1">&#39;s&#39;</span><span class="p">)</span>
+         <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">],</span> 
+         <span class="s1">&#39;rs&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;2-parameter LSE&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;total fare ($)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;tip ($)&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x7fa665252100&gt;]
-</pre></div>
-</div>
-<img alt="_images/02_predict-taxi_23_1.png" src="_images/02_predict-taxi_23_1.png" />
+<img alt="_images/02_predict-taxi_25_0.png" src="_images/02_predict-taxi_25_0.png" />
 </div>
 </div>
-<blockquote>
-<div><p><strong>Note</strong>: Need more credits to get the xgboost running here. Had a bunch of debugging that used up the credits.</p>
-</div></blockquote>
+</div>
+<div class="section" id="mean-squared-error-in-2-parameter-model">
+<h3>Mean squared error in 2-parameter model<a class="headerlink" href="#mean-squared-error-in-2-parameter-model" title="Permalink to this headline">¶</a></h3>
+<p>The model captures the overall trend between tips and fare amounts, but there is variation that was not captured by the model. Here, calculate the <a class="reference external" href="https://en.wikipedia.org/wiki/Mean_squared_error">mean squared error</a> (MSE) to quantify the variance not captured by the current model</p>
+<p><span class="math notranslate nohighlight">\(MSE = \frac{\sum_1^N (y_{test} - y_{predict})^2}{N} = \frac{\sum_1^N (y_{test} - \$0.61 - 0.18\cdot (\$total~fare) - 0.07\frac{\$}{mi}(trip~distance [mi]))^2}{N}\)</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import dask.array as da</span>
-
-<span class="c1"># X_array = X.to_dask_array(lengths = True)</span>
-<span class="c1"># y_array = y.to_dask_array(lengths = True)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MSE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">y_test</span> <span class="o">-</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">X_test</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">X_test</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+<span class="n">MSE</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.503489841743055
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># from dask_glm.estimators import LinearRegression</span>
-</pre></div>
 </div>
 </div>
-</div>
+<div class="section" id="improving-the-model-by-including-more-measurements">
+<h2>Improving the model by including more measurements<a class="headerlink" href="#improving-the-model-by-including-more-measurements" title="Permalink to this headline">¶</a></h2>
+<p>The current regression model only uses fare amount and trip distance to predict the taxi driver tip per trip. You can reduce the mean squared error (MSE) by including more measurements e.g.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VendorID</span></code>: A code indicating the TPEP provider that provided the record.
+1= Creative Mobile Technologies, LLC; 2= VeriFone Inc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tpep_pickup_datetime</span></code>: The date and time when the meter was engaged.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tpep_dropoff_datetime</span></code>: The date and time when the meter was disengaged.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Passenger_count</span></code>: The number of passengers in the vehicle.
+This is a driver-entered value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Trip_distance</span></code>: The elapsed trip distance in miles reported by the taximeter.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PULocationID</span></code>: TLC Taxi Zone in which the taximeter was engaged</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DOLocationID</span></code>: TLC Taxi Zone in which the taximeter was disengaged</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RateCodeID</span></code>: The final rate code in effect at the end of the trip.
+1= Standard rate
+2=JFK
+3=Newark
+4=Nassau or Westchester
+5=Negotiated fare
+6=Group ride</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Payment_type</span></code>: A numeric code signifying how the passenger paid for the trip.
+1= Credit card
+2= Cash
+3= No charge
+4= Dispute
+5= Unknown
+6= Voided trip</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Fare_amount</span></code>: The time-and-distance fare calculated by the meter.
+Extra Miscellaneous extras and surcharges. Currently, this only includes
+the <span class="math notranslate nohighlight">\(\$0.50\)</span> and <span class="math notranslate nohighlight">\(\$1\)</span> rush hour and overnight charges.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Tolls_amount</span></code>: Total amount of all tolls paid in trip.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Total_amount</span></code>: The total amount charged to passengers. Does not include cash tips.</p></li>
+</ul>
+<p>Here, you will use <a class="reference external" href="https://xgboost.readthedocs.io/en/latest/index.html">XGBoost</a> to complete a regression analysis.</p>
+<ol class="simple">
+<li><p>train the model with the training data set</p></li>
+<li><p>plot the predicted response on the subset of data</p></li>
+<li><p>calculate the mean squared error for XGBoost test data</p></li>
+</ol>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
-<span class="n">dtrain</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">dask</span><span class="o">.</span><span class="n">DaskDMatrix</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> 
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">14</span><span class="o">-</span><span class="mi">81</span><span class="n">f5fd861f6c</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">dtrain</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">dask</span><span class="o">.</span><span class="n">DaskDMatrix</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;xgboost&#39;
+<span class="n">dtrain</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">dask</span><span class="o">.</span><span class="n">DaskDMatrix</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb</span><span class="o">.</span><span class="vm">__doc__</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;XGBoost: eXtreme Gradient Boosting library.\n\nContributors: https://github.com/dmlc/xgboost/blob/master/CONTRIBUTORS.md\n&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dask</span>
-
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">persist</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dtrain</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">dask</span><span class="o">.</span><span class="n">DaskDMatrix</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> 
-<span class="n">dtrain</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;xgboost.dask.DaskDMatrix at 0x7f3bb99528b0&gt;
-</pre></div>
-</div>
-</div>
-</div>
+<div class="section" id="train-the-model">
+<h3>1. Train the model<a class="headerlink" href="#train-the-model" title="Permalink to this headline">¶</a></h3>
+<p>Here, you use the Coiled <code class="docutils literal notranslate"><span class="pre">client</span></code> to train the model using 12 measurements described above. The <code class="docutils literal notranslate"><span class="pre">output</span></code> variable is the result of the <a class="reference external" href="https://xgboost.readthedocs.io/en/latest/tutorials/dask.html#other-customization"><code class="docutils literal notranslate"><span class="pre">xgboost.dask.train</span></code></a>. Here, you will build a model with</p>
+<ul class="simple">
+<li><p>regression and squared error loss <code class="docutils literal notranslate"><span class="pre">reg:squarederror</span></code></p></li>
+<li><p>the maximum tree depth of 6 <code class="docutils literal notranslate"><span class="pre">'max_depth':</span> <span class="pre">6</span></code></p></li>
+<li><p>categorical data enabled <code class="docutils literal notranslate"><span class="pre">'enable_categorical':</span> <span class="pre">True</span></code></p></li>
+<li><p>10 boosting rounds <code class="docutils literal notranslate"><span class="pre">num_boost_round=10</span></code></p></li>
+<li><p>training data set to <code class="docutils literal notranslate"><span class="pre">X_train</span></code> and <code class="docutils literal notranslate"><span class="pre">y_train</span></code> contained in the <code class="docutils literal notranslate"><span class="pre">dtrain</span></code> variable</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">dask</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
     <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span>
     <span class="n">params</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">&#39;objective&#39;</span><span class="p">:</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">8</span>
+        <span class="s1">&#39;objective&#39;</span><span class="p">:</span> <span class="s1">&#39;reg:squarederror&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s1">&#39;enable_categorical&#39;</span><span class="p">:</span> <span class="kc">True</span>
     <span class="p">},</span>
     <span class="n">dtrain</span><span class="o">=</span><span class="n">dtrain</span><span class="p">,</span>
-    <span class="n">num_boost_round</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">evals</span><span class="o">=</span><span class="p">[(</span><span class="n">dtrain</span><span class="p">,</span> <span class="s1">&#39;train&#39;</span><span class="p">)]</span>
+    <span class="n">num_boost_round</span><span class="o">=</span><span class="mi">10</span>
+<span class="c1">#     evals=[(dtrain, &#39;train&#39;)]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</div>
+</div>
+<div class="section" id="plot-the-predicted-tips-on-a-subset">
+<h3>2. Plot the predicted tips on a subset<a class="headerlink" href="#plot-the-predicted-tips-on-a-subset" title="Permalink to this headline">¶</a></h3>
+<p>Now, the model has been trained with XGBoost. You can use the <code class="docutils literal notranslate"><span class="pre">taxi_subset</span></code> imported from <code class="docutils literal notranslate"><span class="pre">yellow_tripdata_2019-01_0-end-by-1000.csv</span></code> to plot a subset of the data.</p>
+<ul class="simple">
+<li><p>convert the Pandas dataframe to a Dask dataframe with <code class="docutils literal notranslate"><span class="pre">dask.dataframe.from_pandas</span></code></p></li>
+<li><p>build the XGBoost Dask Matrix as above for the training data with <code class="docutils literal notranslate"><span class="pre">xgb.dask.DaskMatrix</span></code></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dask</span> <span class="kn">import</span> <span class="n">dataframe</span> <span class="k">as</span> <span class="n">dd</span>
+<span class="n">X_subset</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">taxi_subset</span><span class="p">[[</span><span class="s1">&#39;passenger_count&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;trip_distance&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;RatecodeID&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;PULocationID&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;DOLocationID&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;payment_type&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;fare_amount&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;extra&#39;</span><span class="p">,</span>  
+                            <span class="s1">&#39;tolls_amount&#39;</span><span class="p">,</span> 
+                            <span class="s1">&#39;total_amount&#39;</span><span class="p">]],</span> <span class="n">npartitions</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y_subset</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">],</span> <span class="n">npartitions</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">dsubset</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">dask</span><span class="o">.</span><span class="n">DaskDMatrix</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">X_subset</span><span class="p">,</span> <span class="n">y_subset</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, you can use the Dask dataframe as input for the regression model using the <code class="docutils literal notranslate"><span class="pre">xgb.dask.predict</span></code> as such</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_subset_predict</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">dask</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">output</span><span class="p">[</span><span class="s1">&#39;booster&#39;</span><span class="p">],</span> <span class="n">dsubset</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, you can plot the results. Here, you can compare the 2-parameter regression model to the 12-parameter XGBoost model. You capture much more of the variation in the tips with the new model</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">compute</span><span class="p">(),</span> <span class="n">y_subset</span><span class="o">.</span><span class="n">compute</span><span class="p">(),</span> 
+         <span class="s1">&#39;o&#39;</span><span class="p">,</span> 
+        <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;measured data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> 
+         <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">A</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;trip_distance&#39;</span><span class="p">],</span> 
+         <span class="s1">&#39;rs&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;2-parameter LSE&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_subset</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">compute</span><span class="p">(),</span> <span class="n">y_subset_predict</span><span class="o">.</span><span class="n">compute</span><span class="p">(),</span> 
+         <span class="s1">&#39;k*&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;XGBoost model&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;total fare ($)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;tip ($)&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">57</span><span class="o">-</span><span class="mi">3</span><span class="n">f3f07495f7a</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">output</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">dask</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">params</span><span class="o">=</span><span class="p">{</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>         <span class="s1">&#39;objective&#39;</span><span class="p">:</span> <span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>         <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="mi">8</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/xgboost/dask.py</span> in <span class="ni">train</span><span class="nt">(client, params, dtrain, num_boost_round, evals, obj, feval, early_stopping_rounds, xgb_model, verbose_eval, callbacks)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/client.py</span> in <span class="ni">sync</span><span class="nt">(self, func, asynchronous, callback_timeout, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">849</span>             <span class="k">return</span> <span class="n">future</span>
-<span class="g g-Whitespace">    </span><span class="mi">850</span>         <span class="k">else</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">851</span>             <span class="k">return</span> <span class="n">sync</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">852</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">callback_timeout</span><span class="o">=</span><span class="n">callback_timeout</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-<span class="g g-Whitespace">    </span><span class="mi">853</span>             <span class="p">)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/utils.py</span> in <span class="ni">sync</span><span class="nt">(loop, func, callback_timeout, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">352</span>     <span class="k">if</span> <span class="n">error</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-<span class="g g-Whitespace">    </span><span class="mi">353</span>         <span class="n">typ</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">tb</span> <span class="o">=</span> <span class="n">error</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="ne">--&gt; </span><span class="mi">354</span>         <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">355</span>     <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">356</span>         <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/utils.py</span> in <span class="ni">f</span><span class="nt">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">335</span>             <span class="k">if</span> <span class="n">callback_timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">336</span>                 <span class="n">future</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">future</span><span class="p">,</span> <span class="n">callback_timeout</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">337</span>             <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">future</span>
-<span class="g g-Whitespace">    </span><span class="mi">338</span>         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">339</span>             <span class="n">error</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/tornado/gen.py</span> in <span class="ni">run</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">760</span> 
-<span class="g g-Whitespace">    </span><span class="mi">761</span>                     <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">762</span>                         <span class="n">value</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">763</span>                     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">764</span>                         <span class="n">exc_info</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/xgboost/dask.py</span> in <span class="ni">_train_async</span><span class="nt">(client, global_config, params, dtrain, num_boost_round, evals, obj, feval, early_stopping_rounds, verbose_eval, xgb_model, callbacks)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/xgboost/dask.py</span> in <span class="ni">_get_rabit_args</span><span class="nt">(n_workers, client)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/client.py</span> in <span class="ni">_run_on_scheduler</span><span class="nt">(self, function, wait, *args, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2380</span> 
-<span class="g g-Whitespace">   </span><span class="mi">2381</span>     <span class="k">async</span> <span class="k">def</span> <span class="nf">_run_on_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="ne">-&gt; </span><span class="mi">2382</span>         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">run_function</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">2383</span>             <span class="n">function</span><span class="o">=</span><span class="n">dumps</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">2384</span>             <span class="n">args</span><span class="o">=</span><span class="n">dumps</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/core.py</span> in <span class="ni">send_recv_from_rpc</span><span class="nt">(**kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">860</span>             <span class="n">name</span><span class="p">,</span> <span class="n">comm</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;ConnectionPool.&quot;</span> <span class="o">+</span> <span class="n">key</span>
-<span class="g g-Whitespace">    </span><span class="mi">861</span>             <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">862</span>                 <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">send_recv</span><span class="p">(</span><span class="n">comm</span><span class="o">=</span><span class="n">comm</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">863</span>             <span class="k">finally</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">864</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">reuse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/core.py</span> in <span class="ni">send_recv</span><span class="nt">(comm, reply, serializers, deserializers, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">659</span>         <span class="k">if</span> <span class="n">comm</span><span class="o">.</span><span class="n">deserialize</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">660</span>             <span class="n">typ</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">tb</span> <span class="o">=</span> <span class="n">clean_exception</span><span class="p">(</span><span class="o">**</span><span class="n">response</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">661</span>             <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">662</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">663</span>             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">])</span>
-
-<span class="nn">/opt/conda/envs/coiled/lib/python3.9/site-packages/distributed/core.py</span> in <span class="ni">handle_comm</span><span class="nt">()</span>
-
-<span class="nn">/opt/conda/envs/coiled/lib/python3.9/site-packages/distributed/worker.py</span> in <span class="ni">run</span><span class="nt">()</span>
-
-<span class="nn">/opt/conda/envs/coiled/lib/python3.9/site-packages/distributed/protocol/pickle.py</span> in <span class="ni">loads</span><span class="nt">()</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;xgboost&#39;
+<img alt="_images/02_predict-taxi_37_0.png" src="_images/02_predict-taxi_37_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="calculate-the-mse-for-the-xgboost-model">
+<h3>3. Calculate the MSE for the XGBoost model<a class="headerlink" href="#calculate-the-mse-for-the-xgboost-model" title="Permalink to this headline">¶</a></h3>
+<p>The 2-parameter LSE model had <span class="math notranslate nohighlight">\(MSE = (\$)^2 2.5\)</span>. The 12-parameter XGBoost model should reduce this MSE. First, use the booster model to predict the tips using <code class="docutils literal notranslate"><span class="pre">xgb.dask.predict</span></code> on the <code class="docutils literal notranslate"><span class="pre">X_test</span></code> data. Then, compute the average <code class="docutils literal notranslate"><span class="pre">sum()</span></code> of the squared errors.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">prediction</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">dask</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">output</span><span class="p">[</span><span class="s1">&#39;booster&#39;</span><span class="p">],</span> <span class="n">X_test</span><span class="p">)</span>
+<span class="n">MSE_w_xgb</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">prediction</span> <span class="o">-</span> <span class="n">y_test</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">dask</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">client</span><span class="p">,</span>
-                        <span class="p">{</span><span class="s1">&#39;verbosity&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                         <span class="s1">&#39;tree_method&#39;</span><span class="p">:</span> <span class="s1">&#39;hist&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;objective&#39;</span><span class="p">:</span> <span class="s1">&#39;reg:squarederror&#39;</span>
-                         <span class="p">},</span>
-                        <span class="n">dtrain</span><span class="p">,</span>
-                        <span class="n">num_boost_round</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">evals</span><span class="o">=</span><span class="p">[(</span><span class="n">dtrain</span><span class="p">,</span> <span class="s1">&#39;train&#39;</span><span class="p">)])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MSE_w_xgb</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">54</span><span class="o">-</span><span class="mi">0</span><span class="n">fece6946819</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">output</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">dask</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">client</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span>                         <span class="p">{</span><span class="s1">&#39;verbosity&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>                          <span class="s1">&#39;tree_method&#39;</span><span class="p">:</span> <span class="s1">&#39;hist&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>                          <span class="s1">&#39;objective&#39;</span><span class="p">:</span> <span class="s1">&#39;reg:squarederror&#39;</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>                          <span class="p">},</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/xgboost/dask.py</span> in <span class="ni">train</span><span class="nt">(client, params, dtrain, num_boost_round, evals, obj, feval, early_stopping_rounds, xgb_model, verbose_eval, callbacks)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/client.py</span> in <span class="ni">sync</span><span class="nt">(self, func, asynchronous, callback_timeout, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">849</span>             <span class="k">return</span> <span class="n">future</span>
-<span class="g g-Whitespace">    </span><span class="mi">850</span>         <span class="k">else</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">851</span>             <span class="k">return</span> <span class="n">sync</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">852</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">callback_timeout</span><span class="o">=</span><span class="n">callback_timeout</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-<span class="g g-Whitespace">    </span><span class="mi">853</span>             <span class="p">)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/utils.py</span> in <span class="ni">sync</span><span class="nt">(loop, func, callback_timeout, *args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">352</span>     <span class="k">if</span> <span class="n">error</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-<span class="g g-Whitespace">    </span><span class="mi">353</span>         <span class="n">typ</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">tb</span> <span class="o">=</span> <span class="n">error</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="ne">--&gt; </span><span class="mi">354</span>         <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">355</span>     <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">356</span>         <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/utils.py</span> in <span class="ni">f</span><span class="nt">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">335</span>             <span class="k">if</span> <span class="n">callback_timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">336</span>                 <span class="n">future</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">future</span><span class="p">,</span> <span class="n">callback_timeout</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">337</span>             <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">future</span>
-<span class="g g-Whitespace">    </span><span class="mi">338</span>         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">339</span>             <span class="n">error</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/tornado/gen.py</span> in <span class="ni">run</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">760</span> 
-<span class="g g-Whitespace">    </span><span class="mi">761</span>                     <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">762</span>                         <span class="n">value</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">763</span>                     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">764</span>                         <span class="n">exc_info</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/xgboost/dask.py</span> in <span class="ni">_train_async</span><span class="nt">(client, global_config, params, dtrain, num_boost_round, evals, obj, feval, early_stopping_rounds, verbose_eval, xgb_model, callbacks)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/xgboost/dask.py</span> in <span class="ni">_get_rabit_args</span><span class="nt">(n_workers, client)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/client.py</span> in <span class="ni">_run_on_scheduler</span><span class="nt">(self, function, wait, *args, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2380</span> 
-<span class="g g-Whitespace">   </span><span class="mi">2381</span>     <span class="k">async</span> <span class="k">def</span> <span class="nf">_run_on_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="ne">-&gt; </span><span class="mi">2382</span>         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">run_function</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">2383</span>             <span class="n">function</span><span class="o">=</span><span class="n">dumps</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
-<span class="g g-Whitespace">   </span><span class="mi">2384</span>             <span class="n">args</span><span class="o">=</span><span class="n">dumps</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/core.py</span> in <span class="ni">send_recv_from_rpc</span><span class="nt">(**kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">860</span>             <span class="n">name</span><span class="p">,</span> <span class="n">comm</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;ConnectionPool.&quot;</span> <span class="o">+</span> <span class="n">key</span>
-<span class="g g-Whitespace">    </span><span class="mi">861</span>             <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">862</span>                 <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">send_recv</span><span class="p">(</span><span class="n">comm</span><span class="o">=</span><span class="n">comm</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">863</span>             <span class="k">finally</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">864</span>                 <span class="bp">self</span><span class="o">.</span><span class="n">pool</span><span class="o">.</span><span class="n">reuse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">,</span> <span class="n">comm</span><span class="p">)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/distributed/core.py</span> in <span class="ni">send_recv</span><span class="nt">(comm, reply, serializers, deserializers, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">659</span>         <span class="k">if</span> <span class="n">comm</span><span class="o">.</span><span class="n">deserialize</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">660</span>             <span class="n">typ</span><span class="p">,</span> <span class="n">exc</span><span class="p">,</span> <span class="n">tb</span> <span class="o">=</span> <span class="n">clean_exception</span><span class="p">(</span><span class="o">**</span><span class="n">response</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">661</span>             <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">tb</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">662</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">663</span>             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">])</span>
-
-<span class="nn">/opt/conda/envs/coiled/lib/python3.9/site-packages/distributed/core.py</span> in <span class="ni">handle_comm</span><span class="nt">()</span>
-
-<span class="nn">/opt/conda/envs/coiled/lib/python3.9/site-packages/distributed/worker.py</span> in <span class="ni">run</span><span class="nt">()</span>
-
-<span class="nn">/opt/conda/envs/coiled/lib/python3.9/site-packages/distributed/protocol/pickle.py</span> in <span class="ni">loads</span><span class="nt">()</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;xgboost&#39;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.910368403467699
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">est</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="n">fit_intercept</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="n">est</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">28</span><span class="o">-</span><span class="n">d1412b8d56c0</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">est</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">est</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="s1">&#39;fare_amount&#39;</span><span class="p">],</span> <span class="n">y_train</span><span class="p">)</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/dask_glm/estimators.py</span> in <span class="ni">fit</span><span class="nt">(self, X, y)</span>
-<span class="g g-Whitespace">     </span><span class="mi">64</span>     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="g g-Whitespace">     </span><span class="mi">65</span>         <span class="n">X_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maybe_add_intercept</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">66</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_coef</span> <span class="o">=</span> <span class="n">algorithms</span><span class="o">.</span><span class="n">_solvers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">](</span><span class="n">X_</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_fit_kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">67</span> 
-<span class="g g-Whitespace">     </span><span class="mi">68</span>         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_intercept</span><span class="p">:</span>
-
-<span class="nn">~/.conda/envs/coiledcloud/lib/python3.9/site-packages/dask_glm/utils.py</span> in <span class="ni">normalize_inputs</span><span class="nt">(X, y, *args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">20</span>             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">intercept_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">21</span>                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Multiple constant columns detected!&#39;</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">22</span>             <span class="n">mean</span><span class="p">[</span><span class="n">intercept_idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="g g-Whitespace">     </span><span class="mi">23</span>             <span class="n">std</span><span class="p">[</span><span class="n">intercept_idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="g g-Whitespace">     </span><span class="mi">24</span>             <span class="n">mean</span> <span class="o">=</span> <span class="n">mean</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">intercept_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-
-<span class="ne">TypeError</span>: &#39;numpy.float64&#39; object does not support item assignment
-</pre></div>
-</div>
-</div>
-</div>
+<p>You reduced the MSE from <span class="math notranslate nohighlight">\((\$)^2 2.50\rightarrow(\$)^2 1.91\)</span>, congratulations! There are many other factors that can play an important role in the tips, but you built a model that can use the NYC Yellow Cab taxi data set to predict driver tips using distances, fares, passenger count, pickup and dropoff IDs, and toll amounts. You can play with the parameters to reduce the error in the test data</p>
 </div>
 </div>
 <div class="section" id="wrapping-up">
 <h2>Wrapping up<a class="headerlink" href="#wrapping-up" title="Permalink to this headline">¶</a></h2>
-<p>In this notebook, you created a prediction for taxi driver tips based upon over 84 million taxi rides in NYC.</p>
+<p>In this notebook, you created a prediction for taxi driver tips based upon over 84 million taxi rides in NYC. You</p>
+<ul class="simple">
+<li><p>loaded the NYC Yellow Cab data set into Dask dataframe on a Coiled cluster</p></li>
+<li><p>created a 2-parameter least squares error model using some <code class="docutils literal notranslate"><span class="pre">compute()</span></code> commands and linear algebra</p></li>
+<li><p>created a 12-parameter XGBoost squared error regression model</p></li>
+<li><p>reduced the mean squared error (MSE) going from 2-parameters to 12-parameters</p></li>
+<li><p>plotted subsets of the NYC Yellow Cab taxi data set and the model predictions</p></li>
+</ul>
+<p>Next steps: go try Coiled and build some new models or try new data!</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coiled</span><span class="o">.</span><span class="n">delete_cluster</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;taxi-predict&quot;</span><span class="p">)</span>

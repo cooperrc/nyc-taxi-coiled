@@ -231,6 +231,11 @@
      How can you use the Yellow Cab data set?
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pair-plot-for-non-zero-tips-fares-and-distances">
+     Pair plot for non-zero tips, fares, and distances
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -264,7 +269,7 @@
 </div>
 <div class="section" id="exploring-the-nyc-yellow-taxi-data-set">
 <h1>0 - Exploring the NYC Yellow taxi data set<a class="headerlink" href="#exploring-the-nyc-yellow-taxi-data-set" title="Permalink to this headline">¶</a></h1>
-<p>In this notebook, you will explore a small subset of the NYC Yellow Cab dataset from 2018. You have two goals:</p>
+<p>In this notebook, you will explore a small subset of the NYC Yellow Cab dataset from 2019. You have two goals:</p>
 <ul class="simple">
 <li><p>understand <em>what</em> data is collected by Yellow Cab</p></li>
 <li><p>understand <em>how</em> you can use this data in your own predictions</p></li>
@@ -277,17 +282,17 @@
 </ul>
 <div class="section" id="loading-the-yellow-cab-data">
 <h2>Loading the Yellow Cab data<a class="headerlink" href="#loading-the-yellow-cab-data" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">yellow_tripdata_2018-01_0-end-by-1000.csv</span></code> is <span class="math notranslate nohighlight">\(8760 \times 18\)</span>. It is a <em>small</em> subset of the first comma separated value (csv) data set hosted on <span class="xref myst">Amazon Web Services</span>. You can use these data points to plot figures and do some initial data exploration. The first <code class="docutils literal notranslate"><span class="pre">Unnamed</span></code> column corresponds to the row taken from the original csv.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">yellow_tripdata_2019-01_0-end-by-1000.csv</span></code> is <span class="math notranslate nohighlight">\(8760 \times 18\)</span>. It is a <em>small</em> subset of the first comma separated value (csv) data set hosted on <span class="xref myst">Amazon Web Services</span>. You can use these data points to plot figures and do some initial data exploration. The first <code class="docutils literal notranslate"><span class="pre">Unnamed</span></code> column corresponds to the row taken from the original csv.</p>
 <blockquote>
-<div><p><strong>Note</strong>: This data was prepared by taking every 1,000<span class="math notranslate nohighlight">\(^{th}\)</span> row of <code class="docutils literal notranslate"><span class="pre">s3://nyc-tlc/trip</span> <span class="pre">data/yellow_tripdata_2018-01.csv</span></code>. When you load the full Yellow Cab data set into a Dask dataframe, you will use all 8,759,874 in this file and all the other 2018 csv files. The steps to recreate this subset is as such</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">taxi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;s3://nyc-tlc/trip data/yellow_tripdata_2018-01.csv&quot;</span><span class="p">)</span>
+<div><p><strong>Note</strong>: This data was prepared by taking every 1,000<span class="math notranslate nohighlight">\(^{th}\)</span> row of <code class="docutils literal notranslate"><span class="pre">s3://nyc-tlc/trip</span> <span class="pre">data/yellow_tripdata_2019-01.csv</span></code>. When you load the full Yellow Cab data set into a Dask dataframe, you will use all 8,759,874 in this file and all the other 2018 csv files. The steps to recreate this subset is as such</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">taxi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;s3://nyc-tlc/trip data/yellow_tripdata_2019-01.csv&quot;</span><span class="p">)</span>
 <span class="n">taxi</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">1000</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;yellow_tripdata_2018-01_0-end-by-1000.csv&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div></blockquote>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_subset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./yellow_tripdata_2018-01_0-end-by-1000.csv&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_subset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./yellow_tripdata_2019-01_0-end-by-1000.csv&#39;</span><span class="p">)</span>
 <span class="n">taxi_subset</span>
 </pre></div>
 </div>
@@ -669,10 +674,10 @@ tips. Cash tips are not included.</p></li>
 </div>
 <p>In this pairplot, you see</p>
 <ul class="simple">
-<li><p>histograms on the diagonla for each variable: <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>, <code class="docutils literal notranslate"><span class="pre">trip_distance</span></code>, and <code class="docutils literal notranslate"><span class="pre">fare_amount</span></code></p></li>
+<li><p>histograms on the diagonal for each variable: <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>, <code class="docutils literal notranslate"><span class="pre">trip_distance</span></code>, and <code class="docutils literal notranslate"><span class="pre">fare_amount</span></code></p></li>
 <li><p>scatter plots relating <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code>, <code class="docutils literal notranslate"><span class="pre">trip_distance</span></code>, and <code class="docutils literal notranslate"><span class="pre">fare_amount</span></code> on the x-axis in the first, second third columns, respectively and on the y-axis on the first, second, third rows, respectively</p></li>
 </ul>
-<p>The histogram for <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code> has many occurrences of $0. These could be unrecorded tips or cases where the passenger did not tip at all. There is no way to separate these two cases, so you can ignore <code class="docutils literal notranslate"><span class="pre">tip_amount</span> <span class="pre">==</span> <span class="pre">0</span></code>. Similarly, you can ignore <code class="docutils literal notranslate"><span class="pre">trip_distance</span> <span class="pre">==</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">fare_amount</span> <span class="pre">==</span> <span class="pre">0</span></code>.</p>
+<p>The histogram for <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code> has many occurrences of $0. These could be unrecorded tips or cases where the passenger did not tip at all. There is no way to separate these two cases, so you can ignore <code class="docutils literal notranslate"><span class="pre">tip_amount</span> <span class="pre">&lt;=</span> <span class="pre">0</span></code>. Similarly, you can ignore <code class="docutils literal notranslate"><span class="pre">trip_distance</span> <span class="pre">&lt;=</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">fare_amount</span> <span class="pre">&lt;=</span> <span class="pre">0</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">taxi_tips</span> <span class="o">=</span> <span class="n">taxi_subset</span><span class="p">[(</span><span class="n">taxi_subset</span><span class="p">[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> 
@@ -958,6 +963,10 @@ tips. Cash tips are not included.</p></li>
 <p>5781 rows × 18 columns</p>
 </div></div></div>
 </div>
+</div>
+<div class="section" id="pair-plot-for-non-zero-tips-fares-and-distances">
+<h3>Pair plot for non-zero tips, fares, and distances<a class="headerlink" href="#pair-plot-for-non-zero-tips-fares-and-distances" title="Permalink to this headline">¶</a></h3>
+<p>Below, you create another pair plot to look at correlations between the nonzero tips, fares, and distances.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">taxi_tips</span><span class="p">[[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">,</span> <span class="s1">&#39;trip_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;fare_amount&#39;</span><span class="p">]])</span>
@@ -966,7 +975,7 @@ tips. Cash tips are not included.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/00_explore-taxi_11_0.png" src="_images/00_explore-taxi_11_0.png" />
+<img alt="_images/00_explore-taxi_12_0.png" src="_images/00_explore-taxi_12_0.png" />
 </div>
 </div>
 </div>
@@ -974,21 +983,27 @@ tips. Cash tips are not included.</p></li>
 <div class="section" id="studying-the-trends-in-this-subset">
 <h2>Studying the trends in this subset<a class="headerlink" href="#studying-the-trends-in-this-subset" title="Permalink to this headline">¶</a></h2>
 <p>The distribution of data for tips, distance, and fares do not follow a normal distribution. This can make statistics such as mean and standard deviation misleading. One simple analysis you can try on the data is to assume it is normally distributed on a log-scale. This is a <em>very approximate</em> assumption that is used in some financial models e.g. <a class="reference external" href="https://www.journals.uchicago.edu/doi/10.1086/260062">Black and Scholes 1973</a>.</p>
-<p>To visually check the distribution on a log-scale, you will <code class="docutils literal notranslate"><span class="pre">apply</span></code> a logarithm function to the dataframe. This will replot the pair plot such that each variable has been scaled by <span class="xref myst"><code class="docutils literal notranslate"><span class="pre">np.log10</span></code></span>, the <span class="math notranslate nohighlight">\(\log_{10}\)</span> in the NumPy.</p>
+<p>To visually check the distribution on a log-scale, you</p>
+<ol class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">apply</span></code> a logarithm function to the dataframe</p></li>
+<li><p>replot the pair plot such that each variable has been scaled by <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.log10.html"><code class="docutils literal notranslate"><span class="pre">np.log10</span></code></a></p></li>
+</ol>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
 <span class="n">lognormal</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
 <span class="n">f</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">taxi_tips</span><span class="p">[[</span><span class="s1">&#39;tip_amount&#39;</span><span class="p">,</span> <span class="s1">&#39;trip_distance&#39;</span><span class="p">,</span> <span class="s1">&#39;fare_amount&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">lognormal</span><span class="p">))</span>
 <span class="n">f</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Pair plots for tips, distance, and fares</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span><span class="sa">r</span><span class="s1">&#39;$\log_</span><span class="si">{10}</span><span class="s1">$ applied to data&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.08</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/00_explore-taxi_13_0.png" src="_images/00_explore-taxi_13_0.png" />
+<img alt="_images/00_explore-taxi_14_0.png" src="_images/00_explore-taxi_14_0.png" />
 </div>
 </div>
-<p>Now, you can see correlations between <code class="docutils literal notranslate"><span class="pre">tip_amount</span></code> vs <code class="docutils literal notranslate"><span class="pre">trip_distance</span></code> and <code class="docutils literal notranslate"><span class="pre">fare_amount</span></code>. The histograms also look closer to a normal distribution on a log-scale. You can use some statistics of the full data frame with some confidence that the data are normally distributed on a log scale.</p>
+<p>Now, the histograms also look closer to a normal distribution on a log-scale. You can use  statistics of the full data frame with confidence that the data are normally distributed on a log scale, referencing the <a class="reference external" href="https://en.wikipedia.org/wiki/Log-normal_distribution">log-normal distribution</a>.</p>
 </div>
 <div class="section" id="wrapping-up">
 <h2>Wrapping up<a class="headerlink" href="#wrapping-up" title="Permalink to this headline">¶</a></h2>

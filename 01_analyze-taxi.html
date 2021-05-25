@@ -212,8 +212,8 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#launch-a-cluster">
-   Launch a cluster
+  <a class="reference internal nav-link" href="#launch-a-coiled-cluster">
+   Launch a Coiled cluster
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -250,10 +250,10 @@
 <li><p>Coiled</p></li>
 <li><p>Dask</p></li>
 </ul>
-<div class="section" id="launch-a-cluster">
-<h2>Launch a cluster<a class="headerlink" href="#launch-a-cluster" title="Permalink to this headline">¶</a></h2>
-<p>The first step is to spin up a Dask Cluster. In Coiled, this is done by creating a <code class="docutils literal notranslate"><span class="pre">coiled.Cluster</span></code> instance, there are <a class="reference external" href="https://docs.coiled.io/user_guide/api.html#coiled.Cluster">several keyword arguments</a> you can use to specify the details of your cluster further. Please read the <a class="reference external" href="https://docs.coiled.io/user_guide/cluster_creation.html">cluster creation documentation</a> to know more.</p>
-<p>Note that we will give a name to this cluster, if you don’t specify this keyword argument, clusters will be given a unique randomly generated name.</p>
+<div class="section" id="launch-a-coiled-cluster">
+<h2>Launch a Coiled cluster<a class="headerlink" href="#launch-a-coiled-cluster" title="Permalink to this headline">¶</a></h2>
+<p>The first step is to spin up a Dask Cluster. In Coiled, this is done by creating a <code class="docutils literal notranslate"><span class="pre">coiled.Cluster</span></code> instance. You can use <a class="reference external" href="https://docs.coiled.io/user_guide/api.html#coiled.Cluster">keyword arguments</a> to specify the details of your cluster further. Please read the <a class="reference external" href="https://docs.coiled.io/user_guide/cluster_creation.html">cluster creation documentation</a> to know more.</p>
+<p>Give a name to this cluster, if you don’t specify this keyword argument, clusters will be given a unique randomly generated name.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">coiled</span>
@@ -321,7 +321,7 @@
 </div>
 <div class="section" id="analyze-data-in-the-cloud">
 <h2>Analyze data in the cloud<a class="headerlink" href="#analyze-data-in-the-cloud" title="Permalink to this headline">¶</a></h2>
-<p>Now that we have our cluster running and Dask connected to it, let’s run a computation. This example will run the computation on about 84 million rows.</p>
+<p>Now that you have a cluster running and Dask connected to it, run a computation. Here, you find some statistics on NYC Yellow Cab tips, trip distances, and fare amounts. Running the computation on about 84 million rows.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
